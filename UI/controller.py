@@ -28,4 +28,30 @@ class Controller:
         self._view.update()
 
     # Altre Funzioni Event Handler
-    # TODO
+    def aggiorna_lista_auto(self, e):
+        self._view.lista_auto.controls.clear()
+        lista_auto = self._model.get_automobili()
+        if lista_auto is not None:
+            if len(lista_auto) > 0:
+                for auto in self._model.get_automobili():
+                    stato = "✅" if auto.disponibile else "⛔"
+                    self._view.lista_auto.controls.append(ft.Text(f"{stato} {auto}"))
+                self._view.update()
+            else:
+                self._view.show_alert("❌ Non ci sono automobili nel database")
+        else:
+            self._view.show_alert("❌ Non è stato possibile connettersi al database")
+
+    def cerca_automobili_per_modello(self, e):
+        self._view.lista_auto_ricerca.controls.clear()
+        modello = self._view.input_modello_auto.value
+        lista_auto_trovate = self._model.cerca_automobili_per_modello(modello)
+        if lista_auto_trovate is not None:
+            if len(lista_auto_trovate) > 0:
+                for auto in lista_auto_trovate:
+                    self._view.lista_auto_ricerca.controls.append(ft.Text(f"{auto}"))
+                self._view.update()
+            else:
+                self._view.show_alert("❌ Nessuna automobile trovata")
+        else:
+            self._view.show_alert("❌ Non è stato possibile connettersi al database")
